@@ -20,6 +20,9 @@ import com.braintreepayments.api.DropInRequest;
 import com.braintreepayments.api.DropInResult;
 import com.braintreepayments.api.GooglePayRequest;
 import com.braintreepayments.api.PayPalCheckoutRequest;
+import com.braintreepayments.api.PayPalRequest;
+import com.braintreepayments.api.PayPalVaultRequest;
+
 import com.braintreepayments.api.PaymentMethodNonce;
 import com.braintreepayments.api.ThreeDSecureAdditionalInformation;
 import com.braintreepayments.api.ThreeDSecurePostalAddress;
@@ -170,6 +173,22 @@ public class FlutterBraintreeDropIn  implements FlutterPlugin, ActivityAware, Me
     dropInRequest.setGooglePayRequest(googlePayRequest);
   }
 
+  // private static void readPayPalParameters(DropInRequest dropInRequest, MethodCall call) {
+  //   HashMap<String, Object> arg = call.argument("paypalRequest");
+  //   if (arg == null) {
+  //     dropInRequest.setPayPalDisabled(true);
+  //     return;
+  //   }
+  //   String amount = (String) arg.get("amount");
+  //   PayPalCheckoutRequest paypalRequest = new PayPalCheckoutRequest(amount);
+  //   paypalRequest.setCurrencyCode((String) arg.get("currencyCode"));
+  //   paypalRequest.setDisplayName((String) arg.get("displayName"));
+  //   paypalRequest.setBillingAgreementDescription((String) arg.get("billingAgreementDescription"));
+
+  //   dropInRequest.setPayPalRequest(paypalRequest);
+  // }
+
+
   private static void readPayPalParameters(DropInRequest dropInRequest, MethodCall call) {
     HashMap<String, Object> arg = call.argument("paypalRequest");
     if (arg == null) {
@@ -177,13 +196,19 @@ public class FlutterBraintreeDropIn  implements FlutterPlugin, ActivityAware, Me
       return;
     }
     String amount = (String) arg.get("amount");
-    PayPalCheckoutRequest paypalRequest = new PayPalCheckoutRequest(amount);
-    paypalRequest.setCurrencyCode((String) arg.get("currencyCode"));
+    PayPalRequest paypalRequest;
+    if(amount == null) {
+      paypalRequest = new PayPalVaultRequest();
+    } else {
+      paypalRequest = new PayPalCheckoutRequest(amount);
+    }
+    //paypalRequest.setCurrencyCode((String) arg.get("currencyCode"));
     paypalRequest.setDisplayName((String) arg.get("displayName"));
     paypalRequest.setBillingAgreementDescription((String) arg.get("billingAgreementDescription"));
 
     dropInRequest.setPayPalRequest(paypalRequest);
   }
+
 
   @Override
   public boolean onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
