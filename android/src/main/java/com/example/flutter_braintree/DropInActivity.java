@@ -27,7 +27,7 @@ public class DropInActivity extends AppCompatActivity implements DropInListener 
         String token = intent.getStringExtra("token");
 
         // Check if we want PayPal vault flow
-        boolean vaultFlow = intent.getBooleanExtra("paypal_vault_flow", false);
+        boolean vaultFlow = intent.getBooleanExtra("paypal_vault_flow", true);
 
         // DropInClient can also be instantiated with a tokenization key
         this.dropInClient = new DropInClient(this, token);
