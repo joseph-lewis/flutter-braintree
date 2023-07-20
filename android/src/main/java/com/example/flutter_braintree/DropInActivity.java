@@ -5,13 +5,14 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import android.util.Log;
 
 import com.braintreepayments.api.DropInClient;
 import com.braintreepayments.api.DropInListener;
 import com.braintreepayments.api.DropInRequest;
 import com.braintreepayments.api.DropInResult;
+
 import com.braintreepayments.api.PayPalVaultRequest;
-import com.braintreepayments.api.PayPalRequest;
 import com.braintreepayments.api.UserCanceledException;
 
 public class DropInActivity extends AppCompatActivity implements DropInListener {
@@ -26,22 +27,16 @@ public class DropInActivity extends AppCompatActivity implements DropInListener 
         Intent intent = getIntent();
         String token = intent.getStringExtra("token");
 
-        // Check if we want PayPal vault flow
-        boolean vaultFlow = intent.getBooleanExtra("paypal_vault_flow", true);
+
+
+        this.dropInRequest = intent.getParcelableExtra("dropInRequest");
+
 
         // DropInClient can also be instantiated with a tokenization key
         this.dropInClient = new DropInClient(this, token);
 
         // Make sure to register listener in onCreate
         this.dropInClient.setListener(this);
-
-        if (vaultFlow) {
-            this.dropInRequest = new DropInRequest()
-                .clientToken(token)
-                .paypalRequest(new PayPalVaultRequest());
-        } else {
-            this.dropInRequest = intent.getParcelableExtra("dropInRequest");
-        }
     }
 
     @Override
