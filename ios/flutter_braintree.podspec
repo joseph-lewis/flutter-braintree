@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.dependency 'Flutter'
   s.dependency 'BraintreeDropIn', '9.9'
   s.dependency 'Braintree/PayPal', '6.6'
-  s.dependency 'Braintree/ApplePay', '~> 5.19'
+  s.dependency 'Braintree/ApplePay', '6.6'
   s.ios.deployment_target = '14.0'
   s.swift_version = '5.0'
 end
