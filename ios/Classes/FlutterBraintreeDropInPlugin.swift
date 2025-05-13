@@ -29,7 +29,7 @@ func makePaymentSummaryItems(from: Dictionary<String, Any>) -> [PKPaymentSummary
     return outList;
 }
 
-public class FlutterBraintreeDropInPlugin: BaseFlutterBraintreePlugin, FlutterPlugin, BTThreeDSecureRequestDelegate {
+public class FlutterBraintreeDropInPlugin: BaseFlutterBraintreePlugin, FlutterPlugin, BTThreeDSecureRequestDelegate, UIAdaptivePresentationControllerDelegate {
     
 
     
@@ -155,6 +155,9 @@ public class FlutterBraintreeDropInPlugin: BaseFlutterBraintreePlugin, FlutterPl
                 return
             }
                 
+            if let presentationController = existingDropInController.presentationController {
+                presentationController.delegate = self
+            }
             UIApplication.shared.keyWindow?.rootViewController?.present(existingDropInController, animated: true, completion: nil)
         }
     }
@@ -201,6 +204,13 @@ public class FlutterBraintreeDropInPlugin: BaseFlutterBraintreePlugin, FlutterPl
     
     private func handleApplePayResult(_ result: BTPaymentMethodNonce, flutterResult: FlutterResult) {
         flutterResult(["paymentMethodNonce": buildPaymentNonceDict(nonce: result)])
+    }
+    
+    public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        if isHandlingResult {
+            completionBlock(nil)
+            isHandlingResult = false
+        }
     }
 }
 
